@@ -3,21 +3,23 @@ import Nav from "@components/Nav"
 import Provider from "@components/Provider"
 
 export const metadata = {
-    title:"premptopia",
-    description:"Discover & Share AI Prompts"
+    title:"Quote-me",
+    description:"Discover & Share your quotes"
 }
 
 const RootLayout = ({children}) => {
   return (
     <html Lang="en">
-        <body>
-            <div className="main">
+        <body className="">
+            <Provider> 
+            {/* <div className="main">
                 <div className="gradient"/>
-            </div>
-            <main className="app">
+            </div> */}
+            <main className=" app">
                 <Nav />
                 {children}
             </main>
+            </Provider>
         </body>
     </html>
   )

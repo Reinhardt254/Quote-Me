@@ -74,11 +74,11 @@
 /* Tailwind Styles */
 
 .app {
-  @apply relative z-10 flex flex-col items-center justify-center px-6 mx-auto max-w-7xl sm:px-16;
+  @apply relative z-10 flex flex-col items-center justify-center px-6 mx-auto bg-white max-w-7xl sm:px-16;
 }
 
 .black_btn {
-  @apply rounded-full border border-black bg-black py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center;
+  @apply rounded-full border border-black bg-black py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center ;
 }
 
 .outline_btn {
@@ -90,7 +90,7 @@
 }
 
 .orange_gradient {
-  @apply text-transparent bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text;
+  @apply text-transparent bg-gradient-to-r from-green-500 via-green-600 to-yellow-400 bg-clip-text;
 }
 
 .green_gradient {
@@ -98,11 +98,11 @@
 }
 
 .blue_gradient {
-  @apply text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text;
+  @apply text-transparent bg-gradient-to-r from-green-600 to-orange-600 bg-clip-text;
 }
 
 .desc {
-  @apply max-w-2xl mt-5 text-lg text-gray-600 sm:text-xl;
+  @apply max-w-2xl mt-5 text-xl font-bold text-gray-600 sm:text-2xl;
 }
 
 .search_input {
@@ -114,7 +114,7 @@
 }
 
 .glassmorphism {
-  @apply rounded-xl border border-gray-200 bg-white/20 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur p-5;
+  @apply rounded border border-gray-200 bg-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur p-5 mb-10;
 }
 
 .prompt_layout {
@@ -137,9 +137,10 @@
 
 /* Nav Component */
 .logo_text {
-  @apply text-lg font-semibold tracking-wide text-black max-sm:hidden font-satoshi;
+  @apply text-xl font-bold tracking-wide text-black font-satoshi;
 }
 
+/* max-sm:hidden  */
 .dropdown {
   @apply absolute right-0 top-full mt-3 w-full p-5 rounded-lg bg-white min-w-[210px] flex flex-col gap-2 justify-end items-end;
 }

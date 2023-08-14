@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import {signIn, signOut, useSession, getProviders} from "next-auth/react";
-import { BeakerIcon, Bars3Icon } from '@heroicons/react/24/solid';
 
 const Nav = () => {
   
@@ -95,7 +94,7 @@ const Nav = () => {
                 <div className="dropdown">
                   <Link
                    href="/profile"
-                   className="dropdown_link h-40"
+                   className="dropdown_link"
                    onClick={() => setToggleDropDown(false)}
                   >
                     my profile
@@ -124,15 +123,14 @@ const Nav = () => {
         (
           <>
           {providers && Object.values(providers).map((provider)=>(
-            <div  >
-               <Bars3Icon
-               className="h-7 w-7 text-black font-bold" 
-               onClick={()=> signIn(provider.id)}
-               key={provider.name}
-               />
-            </div>
-
-            
+            <button
+             type="button"
+             key={provider.name}
+             onClick={()=> signIn(provider.id)}
+             className="w-full mt- black_btn h-8"
+            >
+              Sign in
+            </button>
           ))}
           </>
         )

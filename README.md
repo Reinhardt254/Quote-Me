@@ -1,6 +1,8 @@
-#Premptopia Blog web Application
+#Quote-me
 
-Built with NextJs || SQL || ATLAS || GOOGLE CLOUD CONSOLE ||
+Post and Discover Quotes about love, relationship and much more.....
+
+Built with NextJs || SQL || MongoDB ATLAS || GOOGLE CLOUD CONSOLE || NEXTAuth
 
 
 

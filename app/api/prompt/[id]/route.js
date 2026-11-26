@@ -1,85 +1,96 @@
-import Prompt from "@models/prompt";
-import { connectToDB } from "@utils/database";
+import {
+  deleteQuote,
+  getQuoteById,
+  getQuoteOwnerId,
+  updateQuote,
+} from "@lib/quotes";
+import { getCurrentUser } from "@lib/session";
 
+export const dynamic = "force-dynamic";
 
-//Get, Read one specific prompt
-export const GET = async (request, {params}) => { 
-    try {
-        await connectToDB();
+export const GET = async (_request, { params }) => {
+  try {
+    const { id } = await params;
+    const prompt = await getQuoteById(id);
 
-        const prompt = await Prompt.findById(params.id).populate("creator");
-
-        if(!prompt) return new Response("prompt not found", 
-        {status: 404})
-
-        return new Response(JSON.stringify(prompt), {
-            status : 200
-        });
-    } catch(error){
-        return new Response("Failed to fetch all prompts",{
-            status: 500
-        })
+    if (!prompt) {
+      return new Response("prompt not found", { status: 404 });
     }
-}
 
-//PATCH (//.........Update  )
+    return new Response(JSON.stringify(prompt), { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new Response("Failed to fetch prompt", { status: 500 });
+  }
+};
 
-export const PATCH = async (req, {params}) => {
-    const { prompt, tag} = await req.json();
+export const PATCH = async (req, { params }) => {
+  const currentUser = await getCurrentUser();
 
-    try {
-        await connectToDB();
+  if (!currentUser) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
-        const existingPrompt = await Prompt.findById(params.id);
+  const { prompt, tag, image } = await req.json();
 
-        if(!existingPrompt) return new Response("prompt not found", 
-        {status: 404});
+  try {
+    const { id } = await params;
+    const ownerId = await getQuoteOwnerId(id);
 
-        existingPrompt.prompt = prompt;
-        existingPrompt.tag= tag;
-
-        await existingPrompt.save();
-
-        return new Response(JSON.stringify(existingPrompt),
-         {status: 200})
-
-    } catch (error) {
-        return new Response("Failed to fetch all prompts",{
-            status: 500});
+    if (!ownerId) {
+      return new Response("prompt not found", { status: 404 });
     }
-}
 
-//=============..........//DELETE()
-
-export const DELETE = async (request, {params}) => {
-
-    try{
-      await connectToDB();
-
-      await Prompt.findByIdAndRemove(params.id);
-
-      return new Response("Prompt deleted successfully", {status: 200})
-
-
-    } catch (error){
-        return new Response("Failed to fetch all prompts",{
-            status: 500})
+    if (ownerId !== currentUser.id) {
+      return new Response("Forbidden", { status: 403 });
     }
-}
 
+    const payload = {
+      id,
+      prompt,
+      tag,
+    };
 
+    if (image !== undefined) {
+      payload.image = typeof image === "string" ? image : null;
+    }
 
+    await updateQuote(payload);
+    const updated = await getQuoteById(id);
 
+    return new Response(JSON.stringify(updated), {
+      status: 200,
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response("Failed to update prompt", { status: 500 });
+  }
+};
 
+export const DELETE = async (_request, { params }) => {
+  const currentUser = await getCurrentUser();
 
+  if (!currentUser) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
+  try {
+    const { id } = await params;
+    const ownerId = await getQuoteOwnerId(id);
 
+    if (!ownerId) {
+      return new Response("prompt not found", { status: 404 });
+    }
 
+    if (ownerId !== currentUser.id) {
+      return new Response("Forbidden", { status: 403 });
+    }
 
+    await deleteQuote(id);
 
-
-
-
-
-
-
+    return new Response("Prompt deleted successfully", { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new Response("Failed to delete prompt", { status: 500 });
+  }
+};

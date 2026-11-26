@@ -1,48 +1,22 @@
-import "@styles/globals.css"
-import Nav from "@components/Nav"
-import Provider from "@components/Provider"
+import "@styles/globals.css";
+import Nav from "@components/Nav";
 
 export const metadata = {
-    title:"Quote-me",
-    description:"Discover & Share your quotes"
-}
+  title: "Quote-me",
+  description: "Discover & Share your quotes",
+};
 
-const RootLayout = ({children}) => {
+const RootLayout = ({ children }) => {
   return (
-    <html Lang="en">
-        <body className="">
-            <Provider> 
-            {/* <div className="main">
-                <div className="gradient"/>
-            </div> */}
-            <main className=" app">
-                <Nav />
-                {children}
-            </main>
-            </Provider>
-        </body>
+    <html lang="en">
+      <body>
+        <main className="app">
+          <Nav />
+          {children}
+        </main>
+      </body>
     </html>
-  )
-}
+  );
+};
 
 export default RootLayout;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

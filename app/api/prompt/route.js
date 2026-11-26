@@ -1,44 +1,18 @@
-import Prompt from "@models/prompt";
-import { connectToDB } from "@utils/database";
+import { listQuotes } from "@lib/quotes";
 
-export const GET = async (request) => {
-    try {
-        await connectToDB();
+export const dynamic = "force-dynamic";
 
-        const prompts = await Prompt.find({}).populate("creator");
+export const GET = async () => {
+  try {
+    const prompts = await listQuotes();
 
-        return new Response(JSON.stringify(prompts), {
-            status : 200
-        });
-    } catch(error){
-        return new Response("Failed to fetch all prompts",{
-            status: 500
-        })
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return new Response(JSON.stringify(prompts), {
+      status: 200,
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response("Failed to fetch all prompts", {
+      status: 500,
+    });
+  }
+};

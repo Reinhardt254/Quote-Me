@@ -1,54 +1,95 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Profile from "@components/Profile"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Profile from "@components/Profile";
+import { useSession } from "@lib/auth-client";
+import { uploadImageFile } from "@lib/client-upload";
 
 const MyProfile = () => {
-
   const router = useRouter();
+  const { data: session, isPending, refetch } = useSession();
+  const userId = session?.user?.id;
+  const [posts, setPosts] = useState([]);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
-    const {data: session} = useSession();
+  useEffect(() => {
+    if (isPending) return;
 
-    const [posts, setPosts] = useState([])
+    if (!userId) {
+      router.push("/");
+      return;
+    }
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-          const response = await fetch(`/api/users/${session?.user.id}/posts`);
-          const data = await response.json();
-    
-          if(session?.user.id) setPosts(data)
-        }
-    
-        fetchPosts();
+    const fetchPosts = async () => {
+      const response = await fetch(`/api/users/${userId}/posts`);
+      const data = await response.json();
+      setPosts(Array.isArray(data) ? data : []);
+    };
 
-      }, []);
+    fetchPosts();
+  }, [isPending, router, userId]);
 
-      const handleEdit = (post) => {
-        router.push(`/update-prompt?id=${post._id}`)
+  const handleEdit = (post) => {
+    router.push(`/update-prompt?id=${post._id}`);
+  };
+
+  const handleDelete = async (post) => {
+    const hasConfirmed = confirm("Are you sure you want to delete this prompt?");
+
+    if (!hasConfirmed) return;
+
+    try {
+      const response = await fetch(`/api/prompt/${post._id.toString()}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) return;
+
+      setPosts((current) => current.filter((item) => item._id !== post._id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingAvatar(true);
+
+    try {
+      const uploaded = await uploadImageFile(file, "avatar");
+      const response = await fetch("/api/user/avatar", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ image: uploaded.url }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to update avatar");
       }
-  
-      const handleDelete = async (post) => {
-        const hasConfirmed = confirm("Are you sure you want to delete this prompt?")
 
-        if(hasConfirmed) {
-          try{
-            await fetch(`/api/prompt/${post._id.toString()}`,{
-              method: "DELETE"
-            });
+      await refetch?.();
+    } catch (error) {
+      console.error(error);
+      alert(error.message || "Failed to update avatar");
+    } finally {
+      setUploadingAvatar(false);
+      e.target.value = "";
+    }
+  };
 
-            const filteredPosts = posts.filter((p) => 
-              p._id !== post._id);
+  if (isPending) {
+    return <p className="desc">Loading profile...</p>;
+  }
 
-              setPosts(filteredPosts)
-
-          } catch(error){
-            console.log(error)
-          }
-        }
-  
-      }
+  if (!session?.user) {
+    return null;
+  }
 
   return (
     <Profile
@@ -57,33 +98,11 @@ const MyProfile = () => {
       data={posts}
       handleEdit={handleEdit}
       handleDelete={handleDelete}
+      avatarUrl={session.user.image}
+      onAvatarChange={handleAvatarChange}
+      uploadingAvatar={uploadingAvatar}
     />
-  )
-}
+  );
+};
 
-export default MyProfile 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default MyProfile;

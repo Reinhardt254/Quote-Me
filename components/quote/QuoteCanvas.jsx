@@ -41,7 +41,7 @@ function CanvasArt({ prompt, tag, image, layoutKey }) {
           <TagChip tag={tag} className="text-white/90" />
           <QuoteBody
             prompt={prompt}
-            className="text-[54px] text-white drop-shadow"
+            className="text-[48px] text-white drop-shadow"
           />
           <BrandMark className="text-white/80" />
         </div>
@@ -52,7 +52,7 @@ function CanvasArt({ prompt, tag, image, layoutKey }) {
           <div className="h-[8px] w-[96px] rounded-full bg-primary" />
           <QuoteBody
             prompt={prompt}
-            className="text-[58px] font-bold text-white"
+            className="text-[52px] font-bold text-white"
           />
           <div className="flex items-center justify-between gap-4">
             <TagChip tag={tag} className="text-primary" />
@@ -74,7 +74,7 @@ function CanvasArt({ prompt, tag, image, layoutKey }) {
           ) : null}
           <div className="absolute inset-0 bg-black/55" />
           <div className="relative z-10 flex h-full flex-col justify-end gap-6 p-[86px]">
-            <QuoteBody prompt={prompt} className="text-[54px] text-white" />
+            <QuoteBody prompt={prompt} className="text-[46px] text-white" />
             <TagChip tag={tag} className="text-accent" />
           </div>
         </div>
@@ -101,7 +101,7 @@ function CanvasArt({ prompt, tag, image, layoutKey }) {
             <TagChip tag={tag} className="text-secondary" />
             <QuoteBody
               prompt={prompt}
-              className="text-[36px] text-foreground"
+              className="text-[32px] text-foreground"
             />
             <BrandMark className="text-muted-foreground" />
           </div>
@@ -115,7 +115,7 @@ function CanvasArt({ prompt, tag, image, layoutKey }) {
           </p>
           <QuoteBody
             prompt={prompt}
-            className="text-[58px] font-semibold tracking-tight text-foreground"
+            className="text-[48px] font-semibold tracking-tight text-foreground"
           />
           <TagChip tag={tag} className="text-primary" />
         </div>
@@ -139,7 +139,7 @@ function CanvasArt({ prompt, tag, image, layoutKey }) {
           )}
           <QuoteBody
             prompt={prompt}
-            className="min-h-0 flex-1 text-[48px] text-black"
+            className="min-h-0 flex-1 text-[42px] text-black"
           />
           <div className="mt-8 flex items-center justify-between gap-4 border-t border-black/10 pt-8">
             <TagChip tag={tag} className="text-green-600" />

@@ -1,12 +1,10 @@
-import { Suspense } from "react";
-import EditPrompt from "./form";
+import { redirect } from "next/navigation";
 
-const UpdatePromptPage = () => {
-  return (
-    <Suspense fallback={<p className="desc">Loading post...</p>}>
-      <EditPrompt />
-    </Suspense>
-  );
-};
-
-export default UpdatePromptPage;
+export default async function UpdatePromptRedirect({ searchParams }) {
+  const params = await searchParams;
+  const id = params?.id;
+  if (id) {
+    redirect(`/dashboard/quotes/${id}`);
+  }
+  redirect("/dashboard/quotes");
+}

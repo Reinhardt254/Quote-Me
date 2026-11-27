@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "skills": {
+    "shadcn-component-discovery": {
+      "source": "mattbx/shadcn-skills",
+      "commit": "4d6045fc5301b796353e90438a55e8293a55b04a",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn-component-discovery/SKILL.md",
+      "computedHash": "f4cc63ce603e468c6993d42332217a9f6604382a506faeb0e9676c944be34375",
+      "installMode": "copy"
+    },
+    "shadcn-component-review": {
+      "source": "mattbx/shadcn-skills",
+      "commit": "4d6045fc5301b796353e90438a55e8293a55b04a",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn-component-review/SKILL.md",
+      "computedHash": "13627f42a4fca365eb73f4b42a921c0276d7b4d8cc6c0baeac7bc09f9a536c4b",
+      "installMode": "copy"
+    }
+  }
+}

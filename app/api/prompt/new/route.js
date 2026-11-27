@@ -11,7 +11,7 @@ export const POST = async (req) => {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const { prompt, tag, image } = await req.json();
+  const { prompt, tag, image, templateId } = await req.json();
 
   try {
     const newPrompt = await createQuote({
@@ -20,6 +20,7 @@ export const POST = async (req) => {
       prompt,
       tag,
       image: typeof image === "string" ? image : null,
+      templateId: typeof templateId === "string" ? templateId : null,
     });
 
     return new Response(JSON.stringify(newPrompt), {

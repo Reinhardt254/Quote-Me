@@ -35,9 +35,13 @@ async function main() {
       "email_verified" boolean DEFAULT false NOT NULL,
       "image" text,
       "username" text,
+      "role" text DEFAULT 'user' NOT NULL,
       "created_at" timestamp DEFAULT now() NOT NULL,
       "updated_at" timestamp DEFAULT now() NOT NULL
     );
+
+    ALTER TABLE "user"
+    ADD COLUMN IF NOT EXISTS "role" text DEFAULT 'user' NOT NULL;
 
     CREATE TABLE IF NOT EXISTS "session" (
       "id" text PRIMARY KEY NOT NULL,
@@ -75,12 +79,34 @@ async function main() {
       "updated_at" timestamp DEFAULT now() NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS "library_image" (
+      "id" text PRIMARY KEY NOT NULL,
+      "title" text NOT NULL,
+      "url" text NOT NULL,
+      "alt" text NOT NULL,
+      "created_at" timestamp DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "template" (
+      "id" text PRIMARY KEY NOT NULL,
+      "name" text NOT NULL,
+      "slug" text NOT NULL UNIQUE,
+      "layout_key" text NOT NULL,
+      "description" text NOT NULL,
+      "active" boolean DEFAULT true NOT NULL,
+      "sort_order" integer DEFAULT 0 NOT NULL,
+      "default_image_id" text REFERENCES "library_image"("id") ON DELETE SET NULL,
+      "created_at" timestamp DEFAULT now() NOT NULL,
+      "updated_at" timestamp DEFAULT now() NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS "quote" (
       "id" text PRIMARY KEY NOT NULL,
       "user_id" text NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
       "prompt" text NOT NULL,
       "tag" text NOT NULL,
       "image" text,
+      "template_id" text REFERENCES "template"("id") ON DELETE SET NULL,
       "created_at" timestamp DEFAULT now() NOT NULL,
       "updated_at" timestamp DEFAULT now() NOT NULL
     );
@@ -88,10 +114,15 @@ async function main() {
     ALTER TABLE "quote"
     ADD COLUMN IF NOT EXISTS "image" text;
 
+    ALTER TABLE "quote"
+    ADD COLUMN IF NOT EXISTS "template_id" text REFERENCES "template"("id") ON DELETE SET NULL;
+
     CREATE INDEX IF NOT EXISTS "session_userId_idx" ON "session" ("user_id");
     CREATE INDEX IF NOT EXISTS "account_userId_idx" ON "account" ("user_id");
     CREATE INDEX IF NOT EXISTS "verification_identifier_idx" ON "verification" ("identifier");
     CREATE INDEX IF NOT EXISTS "quote_userId_idx" ON "quote" ("user_id");
+    CREATE INDEX IF NOT EXISTS "quote_templateId_idx" ON "quote" ("template_id");
+    CREATE INDEX IF NOT EXISTS "template_slug_idx" ON "template" ("slug");
   `);
 
   const tables = await client.query(`

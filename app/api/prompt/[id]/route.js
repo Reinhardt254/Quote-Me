@@ -1,3 +1,4 @@
+import { isAdminUser } from "@lib/admin";
 import {
   deleteQuote,
   getQuoteById,
@@ -31,7 +32,7 @@ export const PATCH = async (req, { params }) => {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const { prompt, tag, image } = await req.json();
+  const { prompt, tag, image, templateId } = await req.json();
 
   try {
     const { id } = await params;
@@ -41,7 +42,7 @@ export const PATCH = async (req, { params }) => {
       return new Response("prompt not found", { status: 404 });
     }
 
-    if (ownerId !== currentUser.id) {
+    if (ownerId !== currentUser.id && !isAdminUser(currentUser)) {
       return new Response("Forbidden", { status: 403 });
     }
 
@@ -53,6 +54,10 @@ export const PATCH = async (req, { params }) => {
 
     if (image !== undefined) {
       payload.image = typeof image === "string" ? image : null;
+    }
+
+    if (templateId !== undefined) {
+      payload.templateId = typeof templateId === "string" ? templateId : null;
     }
 
     await updateQuote(payload);
@@ -82,7 +87,7 @@ export const DELETE = async (_request, { params }) => {
       return new Response("prompt not found", { status: 404 });
     }
 
-    if (ownerId !== currentUser.id) {
+    if (ownerId !== currentUser.id && !isAdminUser(currentUser)) {
       return new Response("Forbidden", { status: 403 });
     }
 
